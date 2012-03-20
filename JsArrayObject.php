@@ -42,6 +42,11 @@ class JsArrayObject extends ArrayObject {
 		return $result;
 	}
 
+	public function reduceRight(Closure $callback, $initialValue = null) {
+		$o = new static(array_reverse($this->getArrayCopy(), false));
+		return $o->reduce($callback, $initialValue);
+	}
+
 	public function some(Closure $callback) {
 		foreach ($this as $key => $member) {
 			if ($callback($member, $key, $this)) {
@@ -58,6 +63,27 @@ class JsArrayObject extends ArrayObject {
 			}
 		}
 		return true;
+	}
+
+	/**
+	 * @note cannot use forEach, as it's a keyword
+	 * @param Closure $callback
+	 */
+	public function each(Closure $callback) {
+		foreach ($this as $key => $member)  {
+			$callback($member, $key, $this);
+		}
+	}
+
+	public function lastIndexOf($member) {
+		// note: DO NOT preserve keys when reversing - else, the order is not really reversed in numerically indexed ArrayObjects. strange? yes.
+		$o = new static(array_reverse($this->getArrayCopy(), false));
+		$idx = $o->indexOf($member);
+		if ($idx === -1) {
+			return $idx;
+		}
+		return count($this) - 1 - $idx;
+
 	}
 
 }

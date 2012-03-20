@@ -33,6 +33,16 @@ class JsArrayObjectTest extends PHPUnit_Framework_TestCase {
 		}, 0));
 	}
 
+	public function testReduceRight() {
+		$o = new JsArrayObject(array(1, 2, 3, 4, 5));
+		$this->assertSame(12, $o->reduceRight(function ($prev, $cur, $idx, $obj) {
+			return $cur > 2 ? $prev + $cur : $prev;
+		}, 0));
+		$this->assertSame(12, $o->reduceRight(function ($prev, $cur, $idx, $obj) {
+			return $cur > 2 ? $prev + $cur : $prev;
+		}));
+	}
+
 
 
 	public function testFilter() {
@@ -77,5 +87,26 @@ class JsArrayObjectTest extends PHPUnit_Framework_TestCase {
 		$this->assertTrue($o->every(function ($n) {
 			return $n > -4;
 		}));
+	}
+
+	public function testEach() {
+		$o = new JsArrayObject(array(1, -2, 6, 11, 100));
+		$cnt = new stdClass();
+		$cnt->cnt = 0;
+		$arr = $o->getArrayCopy();
+		assert_options(ASSERT_WARNING, true);
+		$o->each(function ($val, $idx, $obj) use ($o, $cnt, &$arr) {
+			assert($obj === $o);
+			$cnt->cnt++;
+			assert($val === array_shift($arr));
+		});
+		$this->assertEquals(count($o),  $cnt->cnt);
+	}
+
+	public function testLastIndexOf() {
+		$o = new JsArrayObject(array('a', 'b', 'c', 'd', 'b'));
+		$this->assertEquals(4, $o->lastIndexOf('b'));
+		$this->assertEquals(0, $o->lastIndexOf('a'));
+		$this->assertEquals(3, $o->lastIndexOf('d'));
 	}
 }
