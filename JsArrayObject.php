@@ -85,5 +85,23 @@ class JsArrayObject extends ArrayObject {
 		return count($this) - 1 - $idx;
 
 	}
-
+    
+    public function shift() {
+        $arr = $this->getArrayCopy();
+        $res = array_shift($arr);
+        $this->exchangeArray($arr);
+        return $res;
+    }
+    
+    public function pop() {
+        $idx = $this->count() - 1;
+        if ($idx === -1) {
+            $res = null; 
+        } else {
+            $res = $this->offsetGet($idx);
+            $this->offsetUnset($idx);
+        }
+        return $res;
+    }
+    
 }

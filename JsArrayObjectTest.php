@@ -109,4 +109,46 @@ class JsArrayObjectTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals(0, $o->lastIndexOf('a'));
 		$this->assertEquals(3, $o->lastIndexOf('d'));
 	}
+    
+    public function testLastIndexOf_emptyArr() {
+        $o = new JsArrayObject(array());
+        $this->assertEquals(-1, $o->lastIndexOf('ae'));
+    }
+    
+    public static function provideTestShift() {
+        return array(
+            array(array(), null, null, null),
+            array(array(42, 'xxx'), 42, 'xxx', null),
+            );
+    }
+    
+    /**
+     * @dataProvider provideTestShift 
+     */
+    public function testShift($arr, $res1, $res2, $res3) {
+        $o = new JsArrayObject($arr);
+        $this->assertSame($res1, $o->shift());
+        $this->assertSame($res2, $o->shift());
+        $this->assertSame($res3, $o->shift());
+        $this->assertSame(array(), $o->getArrayCopy());
+    }
+    
+    
+    public static function provideTestPop() {
+        return array(
+            array(array(), null, null, null),
+            array(array(42, 'xxx'), 'xxx', 42, null),
+            );
+    }
+        
+    /**
+     * @dataProvider provideTestPop 
+     */
+    public function testPop($arr, $res1, $res2, $res3) {
+        $o = new JsArrayObject($arr);
+        $this->assertSame($res1, $o->pop());
+        $this->assertSame($res2, $o->pop());
+        $this->assertSame($res3, $o->pop());
+        $this->assertSame(array(), $o->getArrayCopy());
+    }
 }

@@ -4,6 +4,6 @@ The JsArrayObject class extends PHP's native Array.
 
 ## TODO
 
-* most of the methods
+* old methods: slice, sort, splice, join...
 * better class name
 * phpdoc
